@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CipherHook</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#1e1f22" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-title">
+        <span class="hash">#</span>
+        <span>cipherhook</span>
+      </div>
+      <div class="header-actions" id="header_actions">
+        <button id="settings_button" class="icon-btn hidden" title="Settings">⚙</button>
+        <button id="logout_button" class="icon-btn hidden" title="Disconnect">⏻</button>
+      </div>
+    </header>
+
+    <div class="main">
+      <div id="webhook_setup" class="login-view">
+        <div class="login-card">
+          <h1>Welcome back!</h1>
+          <p class="subtitle">Connect a Discord webhook to continue</p>
+          <div class="warning">
+            The webhook URL is your login. Anyone who has it can read and write notes.
+          </div>
+          <div class="form-group">
+            <label>Webhook URL</label>
+            <input id="input_webhook" type="text" autocomplete="off" spellcheck="false" placeholder="https://discord.com/api/webhooks/..." />
+          </div>
+          <button id="set_webhook_button" class="btn btn-primary" disabled>Connect</button>
+          <div id="error_webhook_message" class="error-text">Invalid webhook</div>
+        </div>
+      </div>
+
+      <div id="content" class="content-view hidden">
+        <div class="session-bar">
+          <span id="login_text">Connected</span>
+          <button id="show_hide_button" class="icon-btn" title="Show / hide URL" style="width:auto;padding:0 6px;font-size:12px;">👁</button>
+        </div>
+
+        <div id="settings" class="settings-panel hidden">
+          <h3>Webhook appearance</h3>
+          <div class="settings-row">
+            <div class="form-group">
+              <label>Avatar URL</label>
+              <input id="input_pfp" type="text" autocomplete="off" spellcheck="false" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+              <label>Display name</label>
+              <input id="input_username" type="text" autocomplete="off" spellcheck="false" placeholder="CipherHook" />
+            </div>
+          </div>
+          <div class="settings-actions">
+            <button id="cancel_button" class="btn btn-secondary">Cancel</button>
+            <button id="save_button" class="btn btn-primary" style="width:auto">Save</button>
+          </div>
+          <div id="error_settings_message" class="error-text">Invalid avatar URL</div>
+        </div>
+
+        <div class="notes-count" id="notes_count">0 notes</div>
+        <div class="notes-area" id="notes_container"></div>
+
+        <div id="error_message" class="error-text" style="padding:0 16px 8px">Something went wrong. Check the webhook or try again.</div>
+
+        <div class="compose-bar">
+          <div class="compose-inner">
+            <textarea id="input_note" maxlength="5000" placeholder="Message #cipherhook" rows="1" spellcheck="false"></textarea>
+            <button id="send_button" class="send-btn" disabled title="Send">➤</button>
+          </div>
+          <div class="compose-footer">
+            <span id="char_count">0 / 5000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

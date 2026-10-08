@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cipherhook
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cipherhook}
+      POSTGRES_DB: cipherhook
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cipherhook -d cipherhook"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: ${PORT:-3000}
+      POSTGRES_URL: postgres://cipherhook:${POSTGRES_PASSWORD:-cipherhook}@db:5432/cipherhook
+      POSTGRES_SSL: "false"
+      PUBLIC_KEY_PATH: ${PUBLIC_KEY_PATH:-./keys/public.pem}
+      PRIVATE_KEY_B64: ${PRIVATE_KEY_B64}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - ./keys:/app/keys:ro
+      - ./public:/app/public:ro
+
+volumes:
+  pgdata:
