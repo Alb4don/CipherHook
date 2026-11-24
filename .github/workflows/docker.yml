@@ -6,6 +6,9 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,6 +23,11 @@ jobs:
         with:
           context: .
           push: false
-          tags: cipherhook:local
+          load: true
+          tags: cipherhook:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Image must not contain secrets or test code
+        run: |
+          docker run --rm --entrypoint sh cipherhook:ci -c 'test ! -e /app/keys && test ! -e /app/.env && test ! -e /app/test && test ! -e /app/node_modules/fast-check'
