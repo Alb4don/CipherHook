@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0f1115">
+  <meta name="referrer" content="no-referrer">
+  <title>CipherHook</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=2.0.0">
+  <script src="script.js?v=2.0.0" defer></script>
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+  </svg>
+
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg class="ic"><use href="#i-lock"/></svg></span>
+        <span class="brand-name">CipherHook</span>
+      </div>
+      <div class="session hidden" id="session">
+        <button type="button" class="chip" id="identity" title="Show webhook ID">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="chip-name" id="identity_name">Connected</span>
+          <span class="chip-id" id="identity_id"></span>
+        </button>
+        <button type="button" class="icon-btn" id="refresh_button" title="Reload notes" aria-label="Reload notes"><svg class="ic"><use href="#i-refresh"/></svg></button>
+        <button type="button" class="icon-btn" id="settings_button" title="Webhook appearance" aria-label="Webhook appearance"><svg class="ic"><use href="#i-settings"/></svg></button>
+        <button type="button" class="icon-btn danger" id="logout_button" title="Disconnect and forget this webhook" aria-label="Disconnect"><svg class="ic"><use href="#i-logout"/></svg></button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section id="connect_view" class="connect hidden" aria-labelledby="connect_title">
+        <div class="card connect-card">
+          <div class="connect-icon" aria-hidden="true"><svg class="ic ic-lg"><use href="#i-shield"/></svg></div>
+          <h1 id="connect_title">Connect a webhook</h1>
+          <p class="muted">Notes are encrypted with AES-256-GCM before they reach Discord. The webhook URL is your key: anyone who has it can read and write these notes.</p>
+          <form id="connect_form" novalidate autocomplete="off">
+            <label class="field-label" for="input_webhook">Discord webhook URL</label>
+            <div class="input-wrap">
+              <input id="input_webhook" name="webhook" type="password" inputmode="url" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="https://discord.com/api/webhooks/…" required>
+              <button type="button" class="icon-btn ghost" id="reveal_input" aria-label="Show webhook URL" aria-pressed="false"><svg class="ic"><use href="#i-eye"/></svg></button>
+            </div>
+            <p class="field-error" id="connect_error" role="alert"></p>
+            <label class="check">
+              <input type="checkbox" id="remember" checked>
+              <span>Remember on this device</span>
+            </label>
+            <p class="hint">Turn this off on shared computers. The webhook will then be forgotten when the tab closes.</p>
+            <button type="submit" class="btn btn-primary btn-block" id="connect_button" disabled>
+              <span class="spinner" aria-hidden="true"></span><span class="btn-label">Connect</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section id="app_view" class="workspace hidden" aria-label="Notes">
+        <form class="card composer" id="composer" novalidate>
+          <label class="sr-only" for="input_note">New note</label>
+          <textarea id="input_note" rows="2" maxlength="5000" spellcheck="true" placeholder="Write an encrypted note…"></textarea>
+          <div class="composer-bar">
+            <span class="hint"><kbd>Enter</kbd> to send · <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line</span>
+            <span class="counter" id="char_count" aria-live="polite">0 / 5000</span>
+            <button type="submit" class="btn btn-primary" id="send_button" disabled>
+              <span class="spinner" aria-hidden="true"></span><svg class="ic btn-ic"><use href="#i-send"/></svg><span class="btn-label">Send</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="toolbar">
+          <div class="search">
+            <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
+            <label class="sr-only" for="search">Filter loaded notes</label>
+            <input id="search" type="search" placeholder="Filter loaded notes  ( / )" autocomplete="off" spellcheck="false">
+          </div>
+          <span class="badge" id="notes_count" aria-live="polite">0 notes</span>
+        </div>
+
+        <div class="feed" id="feed" aria-live="polite" aria-busy="false"></div>
+        <div class="feed-status" id="feed_status"></div>
+        <div id="sentinel" class="sentinel" aria-hidden="true"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="settings_dialog" class="dialog" aria-labelledby="settings_title">
+    <form method="dialog" id="settings_form" novalidate>
+      <h2 id="settings_title">Webhook appearance</h2>
+      <p class="muted">How new notes appear in the Discord channel. This does not change existing messages.</p>
+      <label class="field-label" for="input_username">Display name</label>
+      <input id="input_username" type="text" maxlength="80" placeholder="CipherHook" autocomplete="off" spellcheck="false">
+      <p class="hint">Up to 80 characters. Discord rejects names containing “discord” or “clyde”.</p>
+      <label class="field-label" for="input_pfp">Avatar URL</label>
+      <input id="input_pfp" type="url" maxlength="512" placeholder="https://…" autocomplete="off" spellcheck="false">
+      <p class="hint">HTTPS image URL. Leave empty for the default.</p>
+      <p class="field-error" id="settings_error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" id="settings_cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="settings_save" value="save"><span class="spinner" aria-hidden="true"></span><span class="btn-label">Save</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm_dialog" class="dialog dialog-sm" aria-labelledby="confirm_title">
+    <form method="dialog">
+      <h2 id="confirm_title">Delete note?</h2>
+      <p class="muted">The message is removed from Discord and from this vault. This cannot be undone.</p>
+      <blockquote class="quote" id="confirm_preview"></blockquote>
+      <div class="dialog-actions">
+        <button type="submit" class="btn btn-secondary" value="cancel">Cancel</button>
+        <button type="submit" class="btn btn-danger" value="confirm" id="confirm_ok">Delete</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+</body>
+</html>
